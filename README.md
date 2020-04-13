@@ -1,2 +1,2 @@
 # cuit-check-in-bot
- CUIT疫情打卡爬虫
+ CUIT疫情防控-健康打卡爬虫
