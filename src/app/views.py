@@ -39,6 +39,6 @@ def delete():
             return jsonify({"code": -2, "msg": "账号未登记！"})
 
 
-@app.route("/get")
-def get():
-    pass
+@app.route("/ping")
+def ping():
+    return "pong"

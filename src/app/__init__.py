@@ -7,7 +7,7 @@ import regex
 
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["http://localhost:8080", "https://api.stlee.tech"]}})
+CORS(app, resources={r"/*": {"origins": ["http://localhost:8080", "https://bot.stlee.tech"]}})
 
 
 jobstores = {"default": SQLAlchemyJobStore(url="sqlite:///data.db")}
