@@ -49,7 +49,7 @@ headers = [
 ]
 
 
-def checkIn(studentID, studentPassword):
+def checkIn(studentID, password):
     session = requests.session()
 
     # 获取计算中心-计算平台的sessionID
@@ -77,7 +77,7 @@ def checkIn(studentID, studentPassword):
             "WinW": 1920,
             "WinH": "1040",
             "txtId": studentID,
-            "txtMM": studentPassword,
+            "txtMM": password,
             "verifycode": "不分大小写".encode("gb2312"),
             "codeKey": codeKey,
             "Login": "Check",
@@ -155,3 +155,48 @@ def checkIn(studentID, studentPassword):
         print(f'学号：{studentID} {bs.findAll("span")[1].text}')
     else:
         raise Exception("打卡失败！")
+
+
+def login(studentID, password):
+    """成功返回0,，失败返回错误文本"""
+    session = requests.session()
+
+    # 获取计算中心-计算平台的sessionID
+    resp = session.get(urls[0], headers={**headers[0], **commonHeaders})
+    if resp.status_code != 200:
+        raise Exception("获取计算平台的sessionID失败！")
+
+    # 获取跳转链接
+    bs = BeautifulSoup(resp.content.decode("GBK"), "html.parser")
+    urls[1] = bs.meta.find_next().attrs["content"][6:]
+
+    # 获取登陆系统sessionID
+    resp = session.get(urls[1], headers={**headers[1], **commonHeaders})
+    if resp.status_code != 200:
+        raise Exception("获取登陆系统sessionID失败！")
+
+    # 获取codeKey
+    bs = BeautifulSoup(resp.content.decode("GBK"), "html.parser")
+    codeKey = bs.find("input", attrs={"name": "codeKey"}).attrs["value"]
+
+    # 登陆
+    resp = session.post(
+        urls[2],
+        {
+            "WinW": 1920,
+            "WinH": "1040",
+            "txtId": studentID,
+            "txtMM": password,
+            "verifycode": "不分大小写".encode("gb2312"),
+            "codeKey": codeKey,
+            "Login": "Check",
+            "IbtnEnter.x": 26,
+            "IbtnEnter.y": 26,
+        },
+        headers={**headers[2], **commonHeaders},
+    )
+    if resp.content.decode("gbk").find("用户名或密码错误") != -1:
+        bs = BeautifulSoup(resp.content.decode("gbk"), "html.parser")
+        return bs.findAll("span")[0].text
+    else:
+        return 0
