@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
+import time
 
 import requests
 from bs4 import BeautifulSoup
@@ -151,8 +152,11 @@ def checkIn(studentID, password):
         headers={**headers[5], **commonHeaders, "Referer": urls[4] + checkInLink},
     )
     bs = BeautifulSoup(resp.content.decode("GBK"), "html.parser")
+
+    time.sleep(1)
+
     if resp.content.decode("GBK").find("提交打卡成功") != -1:
-        print(f'学号：{studentID} {bs.findAll("span")[1].text}')
+        print(f'打卡成功时间：{time.asctime(time.localtime(time.time()))} 学号：{studentID}')
     else:
         raise Exception("打卡失败！")
 

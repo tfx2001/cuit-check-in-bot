@@ -17,8 +17,9 @@ def index():
                 checkIn,
                 args=[jsonData["studentID"], jsonData["password"]],
                 trigger="cron",
-                hour="10",
+                hour="7",
                 id=jsonData["studentID"],
+                misfire_grace_time=3600
             )
             return jsonify({"code": 0})
         except apscheduler.jobstores.base.ConflictingIdError:
