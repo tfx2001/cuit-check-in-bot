@@ -4,6 +4,7 @@ import time
 
 import requests
 from bs4 import BeautifulSoup
+import regex
 
 from .form import getFormValue
 
@@ -52,6 +53,7 @@ headers = [
 
 def checkIn(studentID, password):
     session = requests.session()
+    # session.proxies.update({"http": "localhost:8888"})
 
     # 获取计算中心-计算平台的sessionID
     resp = session.get(urls[0], headers={**headers[0], **commonHeaders})
@@ -94,7 +96,13 @@ def checkIn(studentID, password):
     # 获取打卡链接
     resp = session.get(urls[3], headers={**headers[3], **commonHeaders})
     bs = BeautifulSoup(resp.content.decode("GBK"), "html.parser")
-    checkInLink = bs.find_all("a")[1].attrs["href"]
+    checkInLink = None
+    for a in bs.find_all("a")[1:]:
+        if regex.search("[0-9]{4}疫情防控——师生健康状态采集", a.text) != None:
+            checkInLink = a.attrs["href"]
+            break
+    # 获取打卡 Id
+    Id = bs.find("a").attrs["href"][-5:]
 
     # 获取前日打卡信息
     resp = session.get(urls[4] + checkInLink)
@@ -107,6 +115,8 @@ def checkIn(studentID, password):
     formValue["sF21650_7"] = "1"
     formValue["sF21650_8"] = "1"
     formValue["sF21650_9"] = "1"
+    formValue["canTj"] = "1"
+    formValue["Id"] = Id
 
     formValue["wtOR_1"] = "\|/".join(
         [
@@ -143,7 +153,7 @@ def checkIn(studentID, password):
     )
 
     for key in formValue:
-        formValue[key] = formValue[key].encode("gbk")
+        formValue[key] = formValue[key].encode("GBK")
 
     # 提交表单
     resp = session.post(
