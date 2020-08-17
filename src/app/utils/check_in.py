@@ -110,11 +110,6 @@ def checkIn(studentID, password):
     formValue = getFormValue(bs)
 
     # 更新表单
-    formValue["sF21650_5"] = "1"
-    formValue["sF21650_6"] = "5"
-    formValue["sF21650_7"] = "1"
-    formValue["sF21650_8"] = "1"
-    formValue["sF21650_9"] = "1"
     formValue["canTj"] = "1"
     formValue["Id"] = Id
 
