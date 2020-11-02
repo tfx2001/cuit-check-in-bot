@@ -51,7 +51,7 @@ headers = [
 ]
 
 
-def checkIn(studentID, password):
+def checkIn(studentID: str, password: str):
     session = requests.session()
     # session.proxies.update({"http": "localhost:8888"})
 
@@ -112,40 +112,13 @@ def checkIn(studentID, password):
     # 更新表单
     formValue["canTj"] = "1"
     formValue["Id"] = Id
-
-    formValue["wtOR_1"] = "\|/".join(
-        [
-            formValue["sF21648_1"],
-            formValue["sF21648_2"],
-            formValue["sF21648_3"],
-            formValue["sF21648_4"],
-            formValue["sF21648_5"],
-            formValue["sF21648_6"],
-        ]
-    )
-
-    formValue["wtOR_2"] = "\|/".join(
-        [
-            formValue["sF21649_1"],
-            formValue["sF21649_2"],
-            formValue["sF21649_3"],
-            formValue["sF21649_4"],
-        ]
-    )
-
-    formValue["wtOR_3"] = "\|/".join(
-        [
-            formValue["sF21650_1"],
-            formValue["sF21650_2"],
-            formValue["sF21650_3"],
-            formValue["sF21650_4"],
-            formValue["sF21650_5"],
-            formValue["sF21650_6"],
-            formValue["sF21650_7"],
-            formValue["sF21650_8"],
-            formValue["sF21650_9"],
-        ]
-    )
+    # 默认不申请出校
+    formValue["sF21912_1"] = ""
+    formValue["sF21912_2"] = ""
+    formValue["sF21912_3"] = ""
+    formValue["sF21912_4"] = ""
+    formValue["sF21912_5"] = ""
+    formValue["sF21912_6"] = ""
 
     for key in formValue:
         formValue[key] = formValue[key].encode("GBK")
@@ -161,7 +134,7 @@ def checkIn(studentID, password):
     time.sleep(1)
 
     if resp.content.decode("GBK").find("提交打卡成功") != -1:
-        print(f'打卡成功时间：{time.asctime(time.localtime(time.time()))} 学号：{studentID}')
+        print(f"打卡成功时间：{time.asctime(time.localtime(time.time()))} 学号：{studentID}")
     else:
         raise Exception("打卡失败！")
 
