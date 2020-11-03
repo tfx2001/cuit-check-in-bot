@@ -53,7 +53,7 @@ headers = [
 
 def checkIn(studentID: str, password: str):
     session = requests.session()
-    session.proxies.update({"http": "localhost:8888"})
+    # session.proxies.update({"http": "localhost:8888"})
 
     # 获取计算中心-计算平台的sessionID
     resp = session.get(urls[0], headers={**headers[0], **commonHeaders})
