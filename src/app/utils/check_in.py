@@ -53,7 +53,7 @@ headers = [
 
 def checkIn(studentID: str, password: str):
     session = requests.session()
-    # session.proxies.update({"http": "localhost:8888"})
+    session.proxies.update({"http": "localhost:8888"})
 
     # 获取计算中心-计算平台的sessionID
     resp = session.get(urls[0], headers={**headers[0], **commonHeaders})
@@ -78,7 +78,7 @@ def checkIn(studentID: str, password: str):
         urls[2],
         {
             "WinW": 1920,
-            "WinH": "1040",
+            "WinH": 1040,
             "txtId": studentID,
             "txtMM": password,
             "verifycode": "不分大小写".encode("gb2312"),
@@ -119,6 +119,40 @@ def checkIn(studentID: str, password: str):
     formValue["sF21912_4"] = ""
     formValue["sF21912_5"] = ""
     formValue["sF21912_6"] = ""
+
+    formValue["wtOR_1"] = "\|/".join(
+        [
+            formValue["sF21648_1"],
+            formValue["sF21648_2"],
+            formValue["sF21648_3"],
+            formValue["sF21648_4"],
+            formValue["sF21648_5"],
+            formValue["sF21648_6"],
+        ]
+    )
+
+    formValue["wtOR_2"] = "\|/".join(
+        [
+            formValue["sF21649_1"],
+            formValue["sF21649_2"],
+            formValue["sF21649_3"],
+            formValue["sF21649_4"],
+        ]
+    )
+
+    formValue["wtOR_3"] = "\|/".join(
+        [
+            formValue["sF21650_1"],
+            formValue["sF21650_2"],
+            formValue["sF21650_3"],
+            formValue["sF21650_4"],
+            formValue["sF21650_5"],
+            formValue["sF21650_6"],
+            formValue["sF21650_7"],
+            formValue["sF21650_8"],
+            formValue["sF21650_9"],
+        ]
+    )
 
     for key in formValue:
         formValue[key] = formValue[key].encode("GBK")
@@ -166,7 +200,7 @@ def login(studentID, password):
         urls[2],
         {
             "WinW": 1920,
-            "WinH": "1040",
+            "WinH": 1040,
             "txtId": studentID,
             "txtMM": password,
             "verifycode": "不分大小写".encode("gb2312"),
